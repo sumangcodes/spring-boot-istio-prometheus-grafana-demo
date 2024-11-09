@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a
+  namespace: demo
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/actuator/prometheus"
+    prometheus.io/port: "8080"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-a
+  template:
+    metadata:
+      labels:
+        app: service-a
+      annotations:
+        sidecar.istio.io/inject: "true"  # Enable sidecar injection for this pod only
+    spec:
+      containers:
+      - name: service-a
+        image: gcr.io/istio-demo-project-440716/service-a:latest
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: service-a-config

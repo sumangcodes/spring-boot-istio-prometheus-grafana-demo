@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kiali
+  namespace: istio-system
+spec:
+  hosts:
+    - "kiali.sumangcodes.info"  # Dedicated hostname for Kiali
+  gateways:
+    - monitoring-gateway
+  http:
+    - route:
+        - destination:
+            host: kiali
+            port:
+              number: 20001  # Default port for Kiali
